@@ -1,0 +1,46 @@
+Rapport : Insertion d’un nombre dans une liste simplement chaînée triée
+
+                     Introduction
+
+Une liste simplement chaînée est une structure de données composée d’éléments appelés nœuds, où chaque nœud contient une valeur et un pointeur vers le nœud suivant. L’objectif de ce devoir est de comprendre et d’implémenter l’insertion d’un élément dans une telle liste tout en maintenant l’ordre trié des éléments.
+
+Principe de la liste simplement chaînée triée
+
+Une liste triée est une liste où les éléments sont rangés dans un ordre croissant (ou décroissant). Lorsqu’on insère un nouveau nombre, il faut le placer à la bonne position pour que la liste conserve cet ordre.
+
+              Méthode d’insertion
+
+1. Parcours de la liste
+On commence à la tête de la liste et on parcourt les nœuds tant que la valeur suivante est inférieure au nombre à insérer.
+
+
+2. Insertion du nouveau nœud
+Une fois la bonne position trouvée, on crée un nouveau nœud contenant le nombre, on ajuste les pointeurs pour l’insérer sans casser la chaîne.
+
+
+3. Cas particuliers
+
+Si la liste est vide, le nouveau nœud devient la tête.
+
+Si le nombre à insérer est plus petit que la tête, il devient la nouvelle tête.
+
+
+
+
+Exemple d’algorithme (en pseudo-code)
+
+fonction insererTrie(liste, nombre):
+    nouveauNoeud = creerNoeud(nombre)
+    si liste.tete == null ou liste.tete.valeur > nombre:
+        nouveauNoeud.suivant = liste.tete
+        liste.tete = nouveauNoeud
+    sinon:
+        courant = liste.tete
+        tant que courant.suivant != null et courant.suivant.valeur < nombre:
+            courant = courant.suivant
+        nouveauNoeud.suivant = courant.suivant
+        courant.suivant = nouveauNoeud
+
+                       Conclusion
+
+L’insertion dans une liste simplement chaînée triée nécessite un parcours pour trouver la position adéquate, suivie d’un ajustement des pointeurs. Cette opération permet de maintenir la propriété d’ordre de la liste sans la re-trier entièrement, optimisant ainsi les performances.
