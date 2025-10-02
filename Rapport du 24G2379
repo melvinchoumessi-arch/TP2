@@ -1,0 +1,96 @@
+TCHINDA TANGA 
+PRIMELLE 
+24G2379
+
+         RAPPORT INDIVIDUEL SUR L’IMPLANTATION DES LISTES CHAÎNÉE EN C
+
+-> Introduction
+
+La liste simplement chaînée circulaire est une structure de données dynamique dans laquelle chaque élément (appelé cellule ou nœud) pointe vers le suivant, et le dernier élément pointe à nouveau vers le premier.
+Elle est utilisée lorsqu’on veut parcourir la liste en boucle sans jamais rencontrer de fin.
+
+Dans ce programme, nous cherchons à réaliser deux opérations fondamentales :
+
+1. L’insertion en tête (ajouter un élément au début).
+2. L’insertion en queue (ajouter un élément à la fin).
+
+
+->Difficultés rencontrées
+
+Lors de l’implémentation, on peut rencontrer plusieurs difficultés :
+
+Maintenir la circularité : s’assurer que le dernier élément pointe toujours sur la tête.
+
+Gérer le cas de la liste vide : lors de la première insertion, le nœud doit pointer sur lui-même.
+
+Parcours pour trouver le dernier élément (insertion en queue), car il faut atteindre celui qui pointe sur la tête.
+
+Bien gérer les pointeurs pour éviter des boucles infinies ou des erreurs de segmentation (segmentation fault).
+
+
+-> Principe / Méthode d’insertion
+
+1. Insertion en tête :
+ 
+Créer une nouvelle cellule.
+Si la liste est vide : la cellule pointe sur elle-même.
+Sinon :
+Parcourir jusqu’au dernier élément.
+Lier la nouvelle cellule à l’ancienne tête.
+Modifier le dernier pour qu’il pointe vers la nouvelle cellule.Mettre à jour la tête.
+
+2. Insertion en queue :
+
+Créer une nouvelle cellule.
+Si la liste est vide : la cellule pointe sur elle-même.
+Sinon :
+Parcourir jusqu’au dernier élément.
+Relier ce dernier à la nouvelle cellule.
+Faire pointer la nouvelle cellule sur la tête.
+
+-> Pseudo-algorithme en C
+
+Insertion en tête 
+void insererTete(cellule** tete, int valeur) {
+    cellule* nouveau = creationCellule(valeur);
+
+    if (*tete == NULL) {
+        *tete = nouveau;
+        nouveau->suiv = nouveau;  // liste circulaire
+    } else {
+        cellule* p = *tete;
+        while (p->suiv != *tete) {
+            p = p->suiv;
+        }
+        nouveau->suiv = *tete;
+        p->suiv = nouveau;
+        *tete = nouveau;  // mise à jour de la tête
+    }
+}
+
+
+Insertion en queue 
+
+void insererQueue(cellule** tete, int valeur) {
+    cellule* nouveau = creationCellule(valeur);
+
+    if (*tete == NULL) {
+        *tete = nouveau;
+        nouveau->suiv = nouveau;
+    } else {
+        cellule* p = *tete;
+        while (p->suiv != *tete) {
+            p = p->suiv;
+        }
+        p->suiv = nouveau;
+        nouveau->suiv = *tete;
+    }
+} 
+
+                         Conclusion 
+En conclusion, ce cours sur les listes chaînées simples et circulaires en C nous a donné les outils nécessaires pour gérer des données dynamiques de manière efficace, ce qui est essentiel pour tout développeur en informatique.
+
+
+  
+
+
