@@ -1,0 +1,205 @@
+TP no 2 DE L’EC2:STRUCTURES DE DONNÉES
+
+**Université de Yaoundé 1**  
+**INF231 - Structures de Données**  
+**L2 Informatique - Année 2025-2026**  
+**PR MELATAGIA**#
+1-DESCRIPTION 
+
+Ce projet est un TP sur les listes chaînées en langage C. On a implémenté plusieurs types de listes pour bien comprendre comment ça marche.
+Tout au long du travail qu'on a réalisé en groupe, nous avons manipulé plusieurs types de listes chaînées notamment  :
+- Liste simplement chaînée
+- Liste doublement chaînée  
+- Liste simplement chaînée circulaire
+- Liste doublement chaînée circulaire
+
+
+1-Programmes réalisés
+Les programmes que j'ai eu a réalisé sont:
+-suppression d'un élément dans une liste ainsi que toutes ses occurrences 
+
+-insertion et suppression d'éléments dans une liste simplement chaînée circulaire
+
+
+-Ce que j’ ai appris
+
+- Comment utiliser les pointeurs en C
+- Allouer et libérer la mémoire avec malloc() et free()
+- Différence entre liste simple et double
+- Comment marche une liste simplement chaînée circulaire
+- Utiliser Git hub pour créer des groupes de travail sur les différents travaux pratiques 
+- Faire un dossier algorithmique
+
+
+-Difficultés rencontrées
+
+Tout à bord je n'ai pas très bien compris la notion de gestion des pointeurs dans les listes chaînées et par conséquent il y’avait des erreurs de segmentation parce que j’ oubliais de vérifier si les pointeurs étaient NULL. Ensuite, je n'apprehendais pas très bien la notion de liste chaînée circulaire parce quil était un peu compliqué de connaître où est la fin de la liste qui au lieu de pointer vers NULL pointe vers le premier élément la liste(notamment la tête de liste). Le travail en groupe en presentiel n’était pas du tout facile à cause des multiples divergences d'idées des différents membres du groupe. 
+
+-Solutions apportées 
+
+Dans l'optique de pallier aux différents difficultés que j'ai rencontré j'ai consulté les cours qui avaient été dispensés en amphi, j'ai consulté des IA pour mieux appréhender les notions qui me paraissaient ambiguës. 
+
+PROGRAMME qui lit un élément et supprime ses occurrences dans une liste 
+
+#include<stdio.h>
+#include<stdlib.h>
+#include <stdbool.h>
+
+// 1. Définition de la liste chaînée 
+struct liste {
+    int element;
+    struct liste* suiv;
+};
+
+typedef struct liste liste;
+
+// 2. Création d'une liste chaînée 
+liste* creerliste() {
+    int i, n, element;
+    liste* tete = NULL;
+    liste* P;
+    
+    printf("Entrer le nombre d'éléments de la liste : ");
+    scanf("%d", &n);
+    
+    for (i = 0; i < n; i++) {
+        P = (liste*)malloc(sizeof(liste));
+        printf("Entrer l'élément no %d : ", i+1);
+        scanf("%d", &element);
+        P->element = element;
+        P->suiv = tete;
+        tete = P;
+    }
+    return tete;
+}
+
+// 3. Ajout d'un élément en fin de liste
+liste* ajoutfin(liste* tete, int element) {
+    liste* nouveau = (liste*)malloc(sizeof(liste));
+    nouveau->element = element;
+    nouveau->suiv = NULL;
+    
+    if (tete == NULL) {
+        return nouveau;
+    }
+    
+    liste* temp = tete;
+    while (temp->suiv != NULL) {
+        temp = temp->suiv;
+    }
+    temp->suiv = nouveau;
+    return tete;
+}
+
+// 4. Recherche et comptage des occurrences 
+int rechercher(liste* L, int x) {
+    int nboccurences = 0;
+    liste* P = L;
+    
+    while (P != NULL) {
+        if (P->element == x) {
+            nboccurences++;
+        }
+        P = P->suiv;
+    }
+    
+    if (nboccurences == 0) {
+        printf("Élément non trouvé\n");
+    } else {
+        printf("Élément trouvé %d fois\n", nboccurences);
+    }
+    
+    return nboccurences;
+}
+
+// 5. Suppression de toutes les occurrences d'un élément 
+liste* supprimerElement(liste* tete, int x) {
+    liste* courant = tete;
+    liste* precedent = NULL;
+    
+    // Supprimer les occurrences en début de liste
+    while (courant != NULL && courant->element == x) {
+        tete = courant->suiv;
+        free(courant);
+        courant = tete;
+    }
+    
+    // Supprimer les occurrences dans le reste de la liste
+    while (courant != NULL) {
+        if (courant->element == x) {
+            precedent->suiv = courant->suiv;
+            free(courant);
+            courant = precedent->suiv;
+        } else {
+            precedent = courant;
+            courant = courant->suiv;
+        }
+    }
+    
+    return tete;
+}
+
+// 6. Affichage de la liste
+void afficherListe(liste* tete) {
+    liste* P = tete;
+    
+    if (P == NULL) {
+        printf("Liste vide\n");
+        return;
+    }
+    
+    printf("Contenu de la liste : ");
+    while (P != NULL) {
+        printf("%d", P->element);
+        if (P->suiv != NULL) {
+            printf(" -> ");
+        }
+        P = P->suiv;
+    }
+    printf(" -> NULL\n");
+}
+
+// Fonction pour libérer la mémoire de toute la liste
+void libererListe(liste* tete) {
+    liste* temp;
+    while (tete != NULL) {
+        temp = tete;
+        tete = tete->suiv;
+        free(temp);
+    }
+}
+
+int main() {
+    int x, nboccurences;
+    liste* L = NULL;
+    
+    // Création de la liste
+    printf("=== CRÉATION DE LA LISTE ===\n");
+    L = creerliste();
+    
+    // Affichage de la liste initiale
+    printf("\n=== LISTE INITIALE ===\n");
+    afficherListe(L);
+    
+    // Recherche d'un élément
+    printf("\n=== RECHERCHE ===\n");
+    printf("Entrer l'élément à rechercher : ");
+    scanf("%d", &x);
+    nboccurences = rechercher(L, x);
+    
+    // Suppression de l'élément
+    if (nboccurences > 0) {
+        printf("\n=== SUPPRESSION ===\n");
+        L = supprimerElement(L, x);
+        printf("Toutes les occurrences de %d ont été supprimées.\n", x);
+        
+        // Affichage de la liste après suppression
+        printf("\n=== LISTE APRÈS SUPPRESSION ===\n");
+        afficherListe(L);
+    }
+    
+    // Libération de la mémoire
+    libererListe(L);
+    
+    return 0;
+}
